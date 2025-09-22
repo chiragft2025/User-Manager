@@ -1,7 +1,13 @@
 li {
     float: left;
+    margin: 5px;
 }
 
-#navbar { 
+#navbar {
+    display: block;
     background-color: black;
+    color: white;
+    
 }
+
+
