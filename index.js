@@ -4,6 +4,7 @@
 
   // Load users from localStorage if available, otherwise empty array
   let users = JSON.parse(localStorage.getItem("users")) || [];
+  let editIndex = -1; // Track which user is being edited
 
   // Render the table from users[]
   function renderTable() {
@@ -25,17 +26,24 @@
     });
   }
 
-  // Add a new user
+  // Add or Update user
   function addUser(event) {
     event.preventDefault();
+
     const firstName = document.getElementById("firstName").value;
     const lastName = document.getElementById("lastName").value;
     const email = document.getElementById("email").value;
     const phone = document.getElementById("phone").value;
     const language = document.getElementById("language").value;
 
-    // Store in array
-    users.push({ firstName, lastName, email, phone, language });
+    if (editIndex >= 0) {
+      // Update existing user
+      users[editIndex] = { firstName, lastName, email, phone, language };
+      editIndex = -1; // reset after update
+    } else {
+      // Add new user
+      users.push({ firstName, lastName, email, phone, language });
+    }
 
     // Save to localStorage
     localStorage.setItem("users", JSON.stringify(users));
@@ -57,6 +65,7 @@
   // Edit user
   function editUser(index) {
     const user = users[index];
+    editIndex = index; // remember which user is being edited
 
     // Prefill form with existing user data
     document.getElementById("firstName").value = user.firstName;
@@ -64,11 +73,6 @@
     document.getElementById("email").value = user.email;
     document.getElementById("phone").value = user.phone;
     document.getElementById("language").value = user.language;
-
-    // Remove old entry (so updated one replaces it on Save)
-    users.splice(index, 1);
-    localStorage.setItem("users", JSON.stringify(users));
-    renderTable();
   }
 
   // Search filter
